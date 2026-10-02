@@ -131,5 +131,13 @@ async def websocket_frames(websocket: WebSocket) -> None:
                 await websocket.send_json({"type": "state", **state})
             except (ValueError, binascii.Error) as error:
                 await websocket.send_json({"type": "error", "message": str(error)})
+            except Exception as error:
+                print(f"VISION ERROR: {type(error).__name__}: {error}", flush=True)
+                await websocket.send_json(
+                    {
+                        "type": "error",
+                        "message": f"{type(error).__name__}: {error}",
+                    }
+                )
     except WebSocketDisconnect:
         return
